@@ -111,9 +111,9 @@ def archive_path( path_download: Path, path_archive ) -> Path :
 
 
 
-def download_payload( path_download: Path, path_archive, auth: (str, str) ) -> (Path, str) :
+def download_payload( path_download: Path, path_archive ) -> (Path, str) :
     print( "DOWNLOAD_payload", path_download )
-    (username, password) = auth
+
     (filepath_archive, filename) = archive_path( path_download, path_archive )
 
     if not path_download.exists( ) :
@@ -121,9 +121,12 @@ def download_payload( path_download: Path, path_archive, auth: (str, str) ) -> (
 
     print("FILEPATH_ARCHIVE", filepath_archive)
     if not filepath_archive.exists( ) : # don't download if it's already there
+
+        (username, password) = authenticate_ftp()
         # download from FTP
         # ToDo: support alternate download locations for people trapped behind company firewalls
-        url_ftp = "ftp.payload.com"
+        import __blueprint__ as blueprint
+        url_ftp = blueprint.url_ftp
         with FTP( url_ftp ) as ftp :
             ftp.login( user=username, passwd=password )
             ftp.cwd( '/dist/' )

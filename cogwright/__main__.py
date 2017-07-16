@@ -13,7 +13,7 @@ from pathlib import Path
 from collections import namedtuple
 
 from .make import backup_payload
-from .make import authenticate_ftp, archive_path, download_payload
+from .make import archive_path, download_payload
 from .make import build_source
 
 import logging
@@ -104,8 +104,7 @@ def cog( parameters: Parameters ) -> True :
 
         ### download new distribution if required, ToDo upgrade optional
         path_archive = download_payload(    parameters.path_download,
-                                            path_archive,
-                                            authenticate_ftp( )
+                                            path_archive
                                        )
         ###unzip
 
