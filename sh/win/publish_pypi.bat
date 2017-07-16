@@ -3,7 +3,7 @@
 
 set THIS_PATH=%~dp0
 set PROJECT_PATH=%THIS_PATH%..\..
-set PIP_CONFIG_FILE=%PROJECT_PATH\..\pip.ini
+set PIP_CONFIG_FILE=C:\dev\secrets\pip.ini
 @pushd %PROJECT_PATH%
 
 rem -- ToDo: macro to obtain __version__
