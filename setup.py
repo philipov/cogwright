@@ -6,6 +6,8 @@
 
 from setuptools import setup
 from pathlib import Path
+import os
+os.environ['__SETUP_PY__'] = "cogwright"
 
 #----------------------------------------------------------------------#
 
@@ -14,7 +16,7 @@ PROJECT_PATH = Path( '.' ).resolve( )
 PROJECT_NAME = PROJECT_PATH.name
 
 ###
-from __version__ import __version__
+from cogwright import __version__
 
 ###
 __description__ = "".join(list(open(str(PROJECT_PATH/'DESCRIPTION'))))
@@ -35,12 +37,14 @@ setup(
     author_email    = 'philipov@gmail.com',
 
     entry_points={
-        'console_scripts' : [ "".join([ 'cog', '=', PROJECT_NAME, '.__main__.main' ]) ],
+        'console_scripts' : [ "".join([ 'cog', '=', PROJECT_NAME, '.__main__:main' ]) ],
     },
 
-    requires = [],
+    requires = ['twine', 'wheel'],
 
     classifiers=[
+        'Development Status : : 2 - Pre - Alpha',
+
         'Environment :: Console',
         'Environment :: Other Environment',
 

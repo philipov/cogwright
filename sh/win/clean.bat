@@ -3,7 +3,7 @@
 @ECHO off
 rem ---------------------------------
 
-set PROJECT_NAME=__project__
+set PROJECT_NAME=cogwright
 set CMD=rmdir /S /Q
 @ECHO on
 

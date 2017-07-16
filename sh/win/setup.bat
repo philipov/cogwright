@@ -4,10 +4,10 @@ rem ---------------------------------
 
 set THIS_PATH=%~dp0
 set PROJECT_PATH=%THIS_PATH%..\..
-set PROJECT_NAME=__project__
+set PROJECT_NAME=cogwright
 
 set PYTHONPATH=%PROJECT_PATH;%PYTHONPATH%
-@pushd %PATH_PROJECT%
+@pushd %PROJECT_PATH%
 
 
 rem ---------------------------------

@@ -9,6 +9,7 @@ download/
 *.egg-info
 
 __ignore__/
+/__blueprint__.py
 .smash/
 
 .pyirc
