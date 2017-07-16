@@ -1,5 +1,5 @@
 # CogWright
-make python platform wheels using a binary payload
+Make python platform wheels using a binary payload
 
 --------------------------------------------------------------------------
 
