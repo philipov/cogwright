@@ -90,21 +90,22 @@ def archive_path( path_download: Path, path_archive ) -> Path :
 
     import __blueprint__ as blueprint
 
-    # select package -- [platform-specific]
-    if sys.platform == "win32" :
-        filename = blueprint.payload_filename_win
+    if path_archive is not None :
+        filepath_archive = Path( path_archive ).resolve( )
+        filename = filepath_archive.name
 
-    elif sys.platform == "linux" or sys.platform == "linux2" :
-        filename = blueprint.payload_filename_nix
+    else:
+        # select package -- [platform-specific]
+        if sys.platform == "win32" :
+            filename = blueprint.payload_filename_win
 
-    else :
-        raise OSError( "Unsupported Platform: " + sys.platform )
+        elif sys.platform == "linux" or sys.platform == "linux2" :
+            filename = blueprint.payload_filename_nix
 
-    filepath_archive = Path( path_download ) / filename
+        else :
+            raise OSError( "Unsupported Platform: " + sys.platform )
 
-    if path_archive is not None:
-        filepath_archive = Path(path_archive).resolve()
-
+        filepath_archive = Path( path_download ) / filename
 
     return filepath_archive, filename
 
@@ -118,6 +119,7 @@ def download_payload( path_download: Path, path_archive, auth: (str, str) ) -> (
     if not path_download.exists( ) :
         path_download.mkdir( )
 
+    print("FILEPATH_ARCHIVE", filepath_archive)
     if not filepath_archive.exists( ) : # don't download if it's already there
         # download from FTP
         # ToDo: support alternate download locations for people trapped behind company firewalls

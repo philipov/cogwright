@@ -39,13 +39,6 @@ def command_line_parameters( argv ) :
     parser = argparse.ArgumentParser( description=__doc__ )
 
     ####################
-    parser.add_argument(
-        'tasks',
-        type=str,
-        nargs=argparse.REMAINDER,
-        help='tasks to execute',
-    )
-    # ToDo: value checking
 
     parser.add_argument(
         '-A', '--archive_path',
@@ -54,10 +47,20 @@ def command_line_parameters( argv ) :
         help='store payload in this path, relative to repository root'
     )
 
+    parser.add_argument(
+        'tasks',
+        type=str,
+        nargs=argparse.REMAINDER,
+        help='tasks to execute',
+    )
+    # ToDo: value checking
+
 
 
     ####################
     args = parser.parse_args( argv )
+
+    print("ARGS", args)
 
     # Configure Tasks
     tasks = set( args.tasks )
@@ -88,6 +91,7 @@ def cog( parameters: Parameters ) -> True :
         backup_payload( parameters.path_payload )
 
     # ToDo: clean this up
+    print("parameters.path_archive", parameters.path_archive)
     (path_archive, _) = archive_path( parameters.path_download, parameters.path_archive )
     if 'download' in parameters.tasks :
         print( "download", path_archive )
@@ -99,7 +103,7 @@ def cog( parameters: Parameters ) -> True :
 
         ### download new distribution if required, ToDo upgrade optional
         path_archive = download_payload(    parameters.path_download,
-                                            parameters.path_archive,
+                                            path_archive,
                                             authenticate_ftp( )
                                        )
         ###unzip
