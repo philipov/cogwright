@@ -1,4 +1,5 @@
-# cogwright -- make python wheels
+# cogwright
+make python platform wheels using a binary payload
 
 --------------------------------------------------------------------------
 
