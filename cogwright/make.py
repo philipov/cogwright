@@ -58,8 +58,8 @@ def backup_payload( path_payload: Path ) :
             print( "MOVE", str( path_payload ), str( path_backup ) )
             break
         except FileNotFoundError as e :
-            #     print(e)
-            #     raise e
+            # print(e)
+            # raise e
             break
 
         except PermissionError as e :
@@ -84,7 +84,7 @@ def authenticate_ftp( ) :
 
 #----------------------------------------------------------------------#
 
-def archive_path( path_download: Path ) -> Path :
+def archive_path( path_download: Path, path_archive ) -> Path :
     filename = None
     extension = None
 
@@ -93,25 +93,27 @@ def archive_path( path_download: Path ) -> Path :
     # select package -- [platform-specific]
     if sys.platform == "win32" :
         filename = blueprint.payload_filename_win
-        extension = "zip"
 
     elif sys.platform == "linux" or sys.platform == "linux2" :
         filename = blueprint.payload_filename_nix
-        extension = "tar.gz"
 
     else :
         raise OSError( "Unsupported Platform: " + sys.platform )
 
     filepath_archive = Path( path_download ) / filename
 
-    return filepath_archive, filename, extension
+    if path_archive is not None:
+        filepath_archive = Path(path_archive).resolve()
+
+
+    return filepath_archive, filename
 
 
 
-def download_payload( path_download: Path, auth: (str, str) ) -> (Path, str) :
+def download_payload( path_download: Path, path_archive, auth: (str, str) ) -> (Path, str) :
     print( "DOWNLOAD_payload", path_download )
     (username, password) = auth
-    (filepath_archive, filename, extension) = archive_path( path_download )
+    (filepath_archive, filename) = archive_path( path_download, path_archive )
 
     if not path_download.exists( ) :
         path_download.mkdir( )
@@ -127,7 +129,7 @@ def download_payload( path_download: Path, auth: (str, str) ) -> (Path, str) :
             with open( str( filepath_archive ), 'wb' ) as localfile :
                 ftp.retrbinary( 'RETR ' + filename, localfile.write, 1024 )
 
-    return filepath_archive, extension
+    return filepath_archive
 
 def install_payload( path_localfile ) :
     pass
@@ -137,21 +139,23 @@ def install_payload( path_localfile ) :
 #----------------------------------------------------------------------#
 
 def build_source( filepath_archive: Path,
-                  extension: str,
                   path_download: Path,
-                  path_source: Path,
                   path_payload: Path
                   ) :
+
     ### extract archive to source path
     import __blueprint__ as blueprint
-    path_extract_tmp = path_download / blueprint.extract_tmp_suffix
-    path_extract = path_download / blueprint.extract_suffix
+    path_extract_tmp    = path_download / blueprint.extract_tmp_suffix
+    path_extract        = path_download / blueprint.extract_suffix
+    path_source         = blueprint.path_source
 
-    if extension == 'zip' :
+    extension           = filepath_archive.suffix
+
+    if extension == '.zip' :
         ### https://stackoverflow.com/questions/3451111/unzipping-files-in-python
         with ZipFile( str( filepath_archive ), "r" ) as zip_ref :
             zip_ref.extractall( str( path_download ) )
-    elif extension == 'tar.gz' :
+    elif extension == '.gz' :
         with tarfile.open( str( filepath_archive ), "r:gz" ) as tar :
             print( "GZIP", path_download )
             tar.extractall( str( path_download ) )

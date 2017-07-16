@@ -21,11 +21,14 @@ import logging
 log = logging.getLogger( name="cogwright.__main__" )
 log.debug = print
 
+sys.path.append(str(Path('.')))
+
 #----------------------------------------------------------------------#
 
 Parameters = namedtuple( 'Parameters', [
     'tasks',
     'path_cwd',
+    'path_archive',
     'path_download',
     'path_source',
     'path_payload'
@@ -45,41 +48,31 @@ def command_line_parameters( argv ) :
     # ToDo: value checking
 
     parser.add_argument(
-        '-D', '--download-path',
-        dest='path_download',
-        default="./download",
+        '-A', '--archive_path',
+        dest='path_archive',
+        default=None,
         help='store payload in this path, relative to repository root'
     )
 
-    parser.add_argument(
-        '-S', '--source-path',
-        dest='path_source',
-        default="./cogwright",
-        help='path to target module'
-    )
 
-    parser.add_argument(
-        '-O', '--payload-path',
-        dest='path_payload',
-        default="cogwright",
-        help='store payload in this path, relative to build path'
-    )
 
     ####################
     args = parser.parse_args( argv )
 
     # Configure Tasks
     tasks = set( args.tasks )
-    if 'all' in tasks :
+    if 'make' in tasks :
         tasks = tasks | { 'backup', 'download', 'build_package' }
 
     ### raise exception if paths don't exist ToDo: try to create paths
     path_cwd        = Path( os.getcwd( ) )
-    path_download   = Path( args.path_download )
-    path_source     = Path( args.path_source ).resolve( )
-    path_payload    = path_source / args.path_payload
+    path_archive    = args.path_archive
+    path_download   = Path( './download' )
+    import __blueprint__ as blueprint
+    path_source     = blueprint.path_source
+    path_payload    = blueprint.path_payload
 
-    parameters = Parameters( tasks, path_cwd, path_download, path_source, path_payload )
+    parameters = Parameters( tasks, path_cwd, path_archive, path_download, path_source, path_payload )
     return parameters
 
 #----------------------------------------------------------------------#
@@ -95,7 +88,7 @@ def cog( parameters: Parameters ) -> True :
         backup_payload( parameters.path_payload )
 
     # ToDo: clean this up
-    (path_archive, _, extension) = archive_path( parameters.path_download )
+    (path_archive, _) = archive_path( parameters.path_download, parameters.path_archive )
     if 'download' in parameters.tasks :
         print( "download", path_archive )
 
@@ -105,7 +98,10 @@ def cog( parameters: Parameters ) -> True :
             parameters.path_download.mkdir( )
 
         ### download new distribution if required, ToDo upgrade optional
-        (path_archive, extension) = download_payload( parameters.path_download, authenticate_ftp( ) )
+        path_archive = download_payload(    parameters.path_download,
+                                            parameters.path_archive,
+                                            authenticate_ftp( )
+                                       )
         ###unzip
 
     if 'expand' in parameters.tasks :
@@ -116,7 +112,8 @@ def cog( parameters: Parameters ) -> True :
 
     if 'build_package' in parameters.tasks :
         print( "build" )
-        build_source( path_archive, extension, parameters.path_download, parameters.path_source,
+        build_source( path_archive,
+                      parameters.path_download,
                       parameters.path_payload )
 
     if 'test' in parameters.tasks :
