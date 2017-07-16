@@ -71,6 +71,7 @@ def command_line_parameters( argv ) :
     path_cwd        = Path( os.getcwd( ) )
     path_archive    = args.path_archive
     path_download   = Path( './download' )
+
     import __blueprint__ as blueprint
     path_source     = blueprint.path_source
     path_payload    = blueprint.path_payload
