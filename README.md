@@ -16,5 +16,6 @@ FTP login credentials may be specified in the `__auth__.py` file, which should b
 
 `cog -A download\archivename.zip make` will specify a different archive to use as the module payload.
 
+An example blueprint script can be found in `tests/testdata/__blueprint__.py`
 
 --------------------------------------------------------------------------
