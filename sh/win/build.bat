@@ -7,7 +7,7 @@ set PROJECT_PATH=%THIS_PATH%..\..
 
 rem pip install wheel
 
-python %PROJECT_PATH%\setup.py sdist bdist_wheel
+python %PROJECT_PATH%\setup.py bdist_wheel
 
 
 @popd
