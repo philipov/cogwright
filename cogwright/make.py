@@ -92,7 +92,7 @@ def archive_path( path_download: Path, path_archive ) -> Path :
     print("path_archive", path_archive)
 
     if path_archive is not None :
-        filepath_archive = Path( path_archive ).resolve( )
+        filepath_archive = Path( path_archive )
         filename = filepath_archive.name
 
     else:
@@ -138,7 +138,7 @@ def download_payload( path_download: Path, path_archive ) -> (Path, str) :
             with open( str( filepath_archive ), 'wb' ) as localfile :
                 ftp.retrbinary( 'RETR ' + filename, localfile.write, 1024 )
 
-    return filepath_archive
+    return filepath_archive.resolve()
 
 def install_payload( path_localfile ) :
     pass
