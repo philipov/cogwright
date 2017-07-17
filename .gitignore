@@ -8,7 +8,8 @@ build/
 download/
 *.egg-info
 
-__ignore__/
+__ignore__
+__backup__
 /__blueprint__.py
 .smash/
 
