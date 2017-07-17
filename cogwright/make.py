@@ -89,6 +89,7 @@ def archive_path( path_download: Path, path_archive ) -> Path :
     extension = None
 
     import __blueprint__ as blueprint
+    print("path_archive", path_archive)
 
     if path_archive is not None :
         filepath_archive = Path( path_archive ).resolve( )
@@ -113,8 +114,11 @@ def archive_path( path_download: Path, path_archive ) -> Path :
 
 def download_payload( path_download: Path, path_archive ) -> (Path, str) :
     print( "DOWNLOAD_payload", path_download )
+    print( "PATH_ARCHIVE", path_archive)
 
-    (filepath_archive, filename) = archive_path( path_download, path_archive )
+    filepath_archive    = path_archive
+    filename            = path_archive.name
+
 
     if not path_download.exists( ) :
         path_download.mkdir( )
